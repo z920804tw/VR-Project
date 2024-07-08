@@ -4,6 +4,7 @@ using TMPro;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.VFX;
 
 public class WeaponGun : MonoBehaviour
 {
@@ -22,11 +23,16 @@ public class WeaponGun : MonoBehaviour
 
     [Header("雜項設定")]
     public LineRenderer lineRenderer;
-
+    public GameObject shootEffect;
     public GameObject GunUI;
     public TextMeshProUGUI ammoText;
 
+    [Header("槍枝音效")]
+    public AudioClip shootClip;
+    AudioSource audioSource;
+
     [Header("Debug")]
+
     public bool useLineRay;
     public bool useContinueShoot;
     [SerializeField] bool isHolding;
@@ -39,11 +45,14 @@ public class WeaponGun : MonoBehaviour
     void Start()
     {
         isHolding = false;
+        useLineRay = false;
         currentBullet = maxBullet;
         timer = fireDelay; //讓使用者剛按下去時就能馬上開槍
         lineRenderer.enabled = false;
         GunUI.SetActive(false);
         UpdateUiText();
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -55,7 +64,7 @@ public class WeaponGun : MonoBehaviour
         }
         else
         {
-            lineRenderer.enabled = false;
+            lineRenderer.enabled=false;
         }
         ShowGunRay();
     }
@@ -101,13 +110,19 @@ public class WeaponGun : MonoBehaviour
                 GameObject bb = Instantiate(bullet, firePos.position, Quaternion.identity);
                 bb.GetComponent<Rigidbody>().AddForce(firePos.forward * bulletSpeed, ForceMode.Impulse);
                 Destroy(bb, 1f);
+
+                GameObject effect = Instantiate(shootEffect, firePos.position, Quaternion.identity);
+                effect.transform.SetParent(firePos);
+                effect.transform.localEulerAngles = new Vector3(0, -90, 0);
+                audioSource.PlayOneShot(shootClip);
+                Destroy(effect, 0.5f);
+
                 currentBullet--;
                 UpdateUiText();
             }
         }
 
     }
-
     void ShowGunRay()
     {
         Ray ray = new Ray(fireRay.position, fireRay.forward);        //槍枝雷射用的
@@ -123,7 +138,6 @@ public class WeaponGun : MonoBehaviour
             lineRenderer.SetPosition(1, fireRay.position + fireRay.forward * maxRayDistance);
         }
     }
-
     public void Shoot()         //單發單發射的武器用
     {
         if (currentBullet > 0)
@@ -131,26 +145,31 @@ public class WeaponGun : MonoBehaviour
             GameObject bb = Instantiate(bullet, firePos.position, Quaternion.identity);
             bb.GetComponent<Rigidbody>().AddForce(firePos.forward * bulletSpeed, ForceMode.Impulse);
             Destroy(bb, 1f);
+
+            GameObject effect = Instantiate(shootEffect, firePos.position, Quaternion.identity);
+            effect.transform.SetParent(firePos);
+            effect.transform.localEulerAngles = new Vector3(0, -90, 0);
+            audioSource.PlayOneShot(shootClip);
+            Destroy(effect, 0.5f);
+
+
             currentBullet--;
             UpdateUiText();
         }
 
     }
 
-
-
-
-
-
     public void Holding()
     {
         isHolding = true;
+        useLineRay = true;
         GunUI.SetActive(true);
 
     }
     public void Reset()
     {
         isHolding = false;
+        useLineRay = false;
         GunUI.SetActive(false);
     }
 }
