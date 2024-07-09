@@ -236,7 +236,7 @@ GameObject:
   - component: {fileID: 1816535812989049981}
   m_Layer: 0
   m_Name: gun2
-  m_TagString: Untagged
+  m_TagString: Gun
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -425,7 +425,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2681151086427603231}
         m_TargetAssemblyTypeName: WeaponGun, Assembly-CSharp
-        m_MethodName: Shoot
+        m_MethodName: PistolShoot
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -530,22 +530,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b49bfabd273db444388a90c6552ad680, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bullet: {fileID: 8951020229925828603, guid: be0515617b37e41428ef7fbd20fada0f, type: 3}
+  gunType: 4
   firePos: {fileID: 4838593001478258842}
   fireRay: {fileID: 26683955437786411}
+  bullet: {fileID: 8951020229925828603, guid: be0515617b37e41428ef7fbd20fada0f, type: 3}
   maxBullet: 10
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 192
   fireDelay: 1
   bulletSpeed: 30
   maxRayDistance: 40
   lineRenderer: {fileID: 1288266348515665033}
   shootEffect: {fileID: 1336949550903370, guid: 4543ab5e3d405ec40a8d4e9aa5165030,
     type: 3}
+  bulletHole: {fileID: 3533695193621778029, guid: 03843d3c125ea584fa0f4304af47b716,
+    type: 3}
   GunUI: {fileID: 8070722135117193383}
   ammoText: {fileID: 4689377392121856076}
-  shootClip: {fileID: 8300000, guid: 0e5ec5d798406aa4699be8c44dd7599f, type: 3}
+  shootClip: {fileID: 8300000, guid: 6244181c57b21c747bc6cdb347cbc460, type: 3}
+  emptyShot: {fileID: 8300000, guid: 7a06ebd7cfd899a419f88b3c857f991d, type: 3}
   useLineRay: 1
-  useContinueShoot: 0
   isHolding: 0
+  bh_Point: {x: 0, y: 0, z: 0}
+  hitPoint: {x: 0, y: 0, z: 0}
 --- !u!120 &1288266348515665033
 LineRenderer:
   serializedVersion: 2
@@ -671,7 +679,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 10
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
