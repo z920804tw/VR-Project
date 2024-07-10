@@ -39,11 +39,11 @@ public class TargetBodySetting : MonoBehaviour
         {
             if (bodyType == BodyType.Head)
             {
-                takeDmg(minDmg,maxDmg);
+                takeDmg(minDmg, maxDmg);
             }
             else if (bodyType == BodyType.Body)
             {
-                takeDmg(minDmg,maxDmg);
+                takeDmg(minDmg, maxDmg);
             }
 
         }
@@ -54,7 +54,6 @@ public class TargetBodySetting : MonoBehaviour
     {
         rndDmg = Random.Range(min, max);
         GameObject parent = transform.parent.GetComponent<TargetSetting>().dmg_UI;
-        parent.GetComponentInChildren<TextMeshProUGUI>().text = $"-{rndDmg}";
 
         Vector3 randomSpread = Random.insideUnitSphere * 0.5f;
         Vector3 pos = dmgUITransform.position + randomSpread;
@@ -63,6 +62,7 @@ public class TargetBodySetting : MonoBehaviour
         dmg.transform.SetParent(this.transform);
 
         StartCoroutine(dmg.GetComponent<TargetDmgUI>().dmgTextMoveUP());
+        parent.GetComponentInChildren<TextMeshProUGUI>().text = $"-{rndDmg}";
         transform.parent.GetComponent<TargetSetting>().TargetHP -= rndDmg;
 
     }

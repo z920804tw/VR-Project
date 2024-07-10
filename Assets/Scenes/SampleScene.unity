@@ -7113,7 +7113,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b49bfabd273db444388a90c6552ad680, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gunType: 0
+  gunType: 2
   firePos: {fileID: 1798878660}
   fireRay: {fileID: 1554190451}
   bullet: {fileID: 8951020229925828603, guid: be0515617b37e41428ef7fbd20fada0f, type: 3}
@@ -11329,7 +11329,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b49bfabd273db444388a90c6552ad680, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gunType: 0
+  gunType: 1
   firePos: {fileID: 1738171105}
   fireRay: {fileID: 880829548}
   bullet: {fileID: 8951020229925828603, guid: be0515617b37e41428ef7fbd20fada0f, type: 3}
@@ -15636,7 +15636,7 @@ PrefabInstance:
     - target: {fileID: 2681151086427603231, guid: e9ff9f27cdea50d4e80cae2438dff194,
         type: 3}
       propertyPath: gunType
-      value: 0
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2681151086427603231, guid: e9ff9f27cdea50d4e80cae2438dff194,
         type: 3}
