@@ -1,8 +1,7 @@
-using System;
+
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.Mathematics;
 using Unity.XR.CoreUtils;
 using UnityEditor;
 using UnityEngine;
@@ -58,6 +57,9 @@ public class WeaponGun : MonoBehaviour
     public Vector3 bh_Point;               //給計算彈孔的方向用
     [HideInInspector]
     public Vector3 hitPoint;
+    Vector3 noHitVector;
+
+    GameObject hitObject;
 
 
 
@@ -65,10 +67,12 @@ public class WeaponGun : MonoBehaviour
 
     void Start()
     {
-        isHolding = false;
-        useLineRay = false;
         currentBullet = maxBullet;
         timer = fireDelay; //讓使用者剛按下去時就能馬上開槍
+        noHitVector=new Vector3(-9999,9999,-9999);
+
+        isHolding = false;
+        useLineRay = false;
         lineRenderer.enabled = false;
         GunUI.SetActive(false);
         UpdateUiText();
@@ -128,11 +132,13 @@ public class WeaponGun : MonoBehaviour
             lineRenderer.SetPosition(1, hit.point);
             bh_Point = hit.normal;              //給計算彈孔的方向用
             hitPoint = hit.point;                 //紀錄hit的點
+            hitObject=hit.collider.gameObject;  //紀錄打到的物件
         }
-        else
+        else                                                            //如果沒有打到物件就會變到這裡。
         {
             lineRenderer.SetPosition(1, fireRay.position + fireRay.forward * maxRayDistance);
-            hitPoint = new Vector3(999, 999, 999);                                                  //如果射線沒有打到東西就設定這個值，代表沒有\打到東西
+            hitPoint = noHitVector;                                                 //如果射線沒有打到東西就設定這個值，代表沒有\打到東西
+            hitObject=null;
             //hitPoint=fireRay.position+fireRay.forward * maxRayDistance;
         }
 
@@ -162,10 +168,11 @@ public class WeaponGun : MonoBehaviour
                 Destroy(effect, 0.5f);
 
 
-                if (hitPoint != new Vector3(999, 999, 999))
+                if (hitPoint != noHitVector)
                 {
                     rotate = bulletHoleRotate(bh_Point);
                     GameObject bh = Instantiate(bulletHole, hitPoint, rotate);
+                    bh.transform.SetParent(hitObject.transform);
                     Destroy(bh, 10f);
                 }
 
@@ -201,11 +208,11 @@ public class WeaponGun : MonoBehaviour
             audioSource.PlayOneShot(shootClip);
             Destroy(effect, 0.5f);
 
-            if (hitPoint != new Vector3(999, 999, 999))
+            if (hitPoint !=noHitVector)                                                                                     //如果射線沒有打到指定的layemask就不會生成彈孔
             {
                 rotate = bulletHoleRotate(bh_Point);
-
                 GameObject bh = Instantiate(bulletHole, hitPoint, rotate);
+                bh.transform.SetParent(hitObject.transform);
                 Destroy(bh, 10f);
             }
 
@@ -225,7 +232,7 @@ public class WeaponGun : MonoBehaviour
         {
             for (int i = 0; i < 10; i++)                                                //這邊會跑一個for迴圈，這樣可以一次射出10發子彈
             {
-                Vector3 randomSpread = UnityEngine.Random.insideUnitSphere * 0.1f;     //Random.insideUnitSphere 可以隨機產生一個方向偏移量
+                Vector3 randomSpread = Random.insideUnitSphere * 0.1f;     //Random.insideUnitSphere 可以隨機產生一個方向偏移量
                 Vector3 dir = firePos.forward + randomSpread;
 
                 Ray sgRay = new Ray(firePos.position, dir);                            //這邊會用射線來顯示彈孔的生成位置
@@ -238,6 +245,7 @@ public class WeaponGun : MonoBehaviour
                     sHit2 = sgHit.point;                                                //設限命中的點
                     rotate = bulletHoleRotate(sHit);                                    //會去使用這個含式來看彈孔要怎麼顯示(旋轉)到正確位置
                     GameObject bh = Instantiate(bulletHole, sHit2, rotate);             //生成彈孔在雷射打到的位置上
+                    bh.transform.SetParent(sgHit.collider.transform);                   //設定彈孔物件會變成打到的那個物件的子物件，這樣彈孔就會跟著物件移動了。
                     Destroy(bh, 10f);                                                   //設定彈孔殘留時間
                 }
 
@@ -283,22 +291,22 @@ public class WeaponGun : MonoBehaviour
 
     Quaternion bulletHoleRotate(Vector3 t)        //子彈彈孔的方向設定
     {
-        if (t == Vector3.up || t == Vector3.down)
+        if (t == Vector3.up || t == Vector3.down)               //向量為上或下時，X軸旋轉90
         {
             return Quaternion.Euler(90, 0, 0);
 
         }
-        else if (t == Vector3.left || t == Vector3.right)
+        else if (t == Vector3.left || t == Vector3.right)       //向量為左或右時，Y軸旋轉90
         {
             return Quaternion.Euler(0, 90, 0);
         }
-        else if (t == Vector3.forward || t == Vector3.back)
+        else if (t == Vector3.forward || t == Vector3.back)     //向量為前或後時,不變。
         {
             return Quaternion.Euler(0, 0, 0);
         }
-        else
+        else                                                    //有問題時，為預設
         {
-            return quaternion.identity;
+            return Quaternion.identity;
         }
 
     }
