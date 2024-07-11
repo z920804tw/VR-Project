@@ -20,7 +20,6 @@ public class Bullet : MonoBehaviour
     {
         if (other.collider.tag != "Gun"&& other.collider.tag!="Bullet")
         {
-
             Destroy(this.gameObject);
         }
     }

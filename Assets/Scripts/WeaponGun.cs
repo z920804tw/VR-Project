@@ -14,6 +14,7 @@ public enum GunType
     Shotgun,
     Sniper,
     Pistol,
+    SMG,
 }
 public class WeaponGun : MonoBehaviour
 {
@@ -31,6 +32,7 @@ public class WeaponGun : MonoBehaviour
     [SerializeField] float fireDelay;
     [SerializeField] float bulletSpeed;
     [SerializeField] float maxRayDistance;
+    [SerializeField] float spread;
 
     [Header("雜項設定")]
     public LineRenderer lineRenderer;
@@ -53,23 +55,11 @@ public class WeaponGun : MonoBehaviour
     public bool isHolding;
     float timer;
 
-    [HideInInspector]
-    public Vector3 bh_Point;               //給計算彈孔的方向用
-    [HideInInspector]
-    public Vector3 hitPoint;
-    Vector3 noHitVector;
-
-    GameObject hitObject;
-
-
-
-
 
     void Start()
     {
         currentBullet = maxBullet;
         timer = fireDelay; //讓使用者剛按下去時就能馬上開槍
-        noHitVector=new Vector3(-9999,9999,-9999);
 
         isHolding = false;
         useLineRay = false;
@@ -91,7 +81,7 @@ public class WeaponGun : MonoBehaviour
     }
     private void OnTriggerStay(Collider other)
     {
-        if (isHolding && gunType == GunType.Rifle)  //只有連射武器會需要用到，如果是一般單發射擊不用用到。
+        if (isHolding && gunType == GunType.Rifle || gunType==GunType.SMG)  //只有連射武器會需要用到，如果是一般單發射擊不用用到。1
         {
             if (other.gameObject.tag == "Hand")
             {
@@ -103,7 +93,7 @@ public class WeaponGun : MonoBehaviour
                 }
             }
         }
-        if (other.gameObject.tag == "Clip")     //裝彈藥123
+        if (other.gameObject.tag == "Clip" && other.GetComponent<BulletClip>().gunType==this.gunType)     //裝彈藥123
         {
             if (currentBullet <= 0)
             {
@@ -124,29 +114,51 @@ public class WeaponGun : MonoBehaviour
             lineRenderer.enabled = false;
         }
 
+
         Ray ray = new Ray(fireRay.position, fireRay.forward);        //槍枝雷射用的
         RaycastHit hit;
         lineRenderer.SetPosition(0, fireRay.position);
         if (Physics.Raycast(ray, out hit, maxRayDistance, layerMask))
         {
             lineRenderer.SetPosition(1, hit.point);
-            bh_Point = hit.normal;              //給計算彈孔的方向用
-            hitPoint = hit.point;                 //紀錄hit的點
-            hitObject=hit.collider.gameObject;  //紀錄打到的物件
         }
         else                                                            //如果沒有打到物件就會變到這裡。
         {
             lineRenderer.SetPosition(1, fireRay.position + fireRay.forward * maxRayDistance);
-            hitPoint = noHitVector;                                                 //如果射線沒有打到東西就設定這個值，代表沒有\打到東西
-            hitObject=null;
-            //hitPoint=fireRay.position+fireRay.forward * maxRayDistance;
         }
 
     }
     void UpdateUiText()
     {
         ammoText.text = $"{currentBullet}/{maxBullet}";
+    }
 
+    void InstantiateBullet()
+    {
+        Vector3 gunSpread = Random.insideUnitCircle * spread;
+        Vector3 dir = firePos.forward + gunSpread;
+
+        Ray ray = new Ray(firePos.position, dir);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, maxRayDistance, layerMask))
+        {
+            rotate = bulletHoleRotate(hit.normal);
+            GameObject bh = Instantiate(bulletHole, hit.point, rotate);
+            bh.transform.SetParent(hit.collider.transform);
+            Destroy(bh, 10f);
+        }
+
+        GameObject bb = Instantiate(bullet, firePos.position, Quaternion.identity);
+        bb.GetComponent<Rigidbody>().AddForce(dir * bulletSpeed, ForceMode.Impulse);
+        Destroy(bb, 2f);
+
+
+        GameObject effect = Instantiate(shootEffect, firePos.position, Quaternion.identity);
+        effect.transform.SetParent(firePos);
+        effect.transform.localEulerAngles = new Vector3(0, -90, 0);
+        audioSource.PlayOneShot(shootClip);
+        Destroy(effect, 0.5f);
     }
 
     void ContinueShoot()    //連射武器用的，例如步槍
@@ -157,26 +169,8 @@ public class WeaponGun : MonoBehaviour
             if (timer > fireDelay)
             {
                 timer = 0;
-                GameObject bb = Instantiate(bullet, firePos.position, Quaternion.identity);
-                bb.GetComponent<Rigidbody>().AddForce(firePos.forward * bulletSpeed, ForceMode.Impulse);
-                Destroy(bb, 2f);
 
-                GameObject effect = Instantiate(shootEffect, firePos.position, Quaternion.identity);
-                effect.transform.SetParent(firePos);
-                effect.transform.localEulerAngles = new Vector3(0, -90, 0);
-                audioSource.PlayOneShot(shootClip);
-                Destroy(effect, 0.5f);
-
-
-                if (hitPoint != noHitVector)
-                {
-                    rotate = bulletHoleRotate(bh_Point);
-                    GameObject bh = Instantiate(bulletHole, hitPoint, rotate);
-                    bh.transform.SetParent(hitObject.transform);
-                    Destroy(bh, 10f);
-                }
-
-
+                InstantiateBullet();
                 currentBullet--;
                 UpdateUiText();
             }
@@ -189,33 +183,14 @@ public class WeaponGun : MonoBehaviour
                 timer = 0;
                 audioSource.PlayOneShot(emptyShot);
             }
-
         }
-
     }
 
     public void PistolShoot()         //手槍用
     {
         if (currentBullet > 0)
         {
-            GameObject bb = Instantiate(bullet, firePos.position, Quaternion.identity);                                     //產生子彈
-            bb.GetComponent<Rigidbody>().AddForce(firePos.forward * bulletSpeed, ForceMode.Impulse);
-            Destroy(bb, 2f);
-
-            GameObject effect = Instantiate(shootEffect, firePos.position, Quaternion.identity);                            //產生開火特效和音效
-            effect.transform.SetParent(firePos);
-            effect.transform.localEulerAngles = new Vector3(0, -90, 0);
-            audioSource.PlayOneShot(shootClip);
-            Destroy(effect, 0.5f);
-
-            if (hitPoint !=noHitVector)                                                                                     //如果射線沒有打到指定的layemask就不會生成彈孔
-            {
-                rotate = bulletHoleRotate(bh_Point);
-                GameObject bh = Instantiate(bulletHole, hitPoint, rotate);
-                bh.transform.SetParent(hitObject.transform);
-                Destroy(bh, 10f);
-            }
-
+            InstantiateBullet();
             currentBullet--;
             UpdateUiText();
         }
@@ -232,19 +207,15 @@ public class WeaponGun : MonoBehaviour
         {
             for (int i = 0; i < 10; i++)                                                //這邊會跑一個for迴圈，這樣可以一次射出10發子彈
             {
-                Vector3 randomSpread = Random.insideUnitSphere * 0.1f;     //Random.insideUnitSphere 可以隨機產生一個方向偏移量
+                Vector3 randomSpread = Random.insideUnitCircle * spread;     //Random.insideUnitSphere 可以隨機產生一個方向偏移量
                 Vector3 dir = firePos.forward + randomSpread;
 
                 Ray sgRay = new Ray(firePos.position, dir);                            //這邊會用射線來顯示彈孔的生成位置
                 RaycastHit sgHit;
-                Vector3 sHit;       //紀錄normal
-                Vector3 sHit2;      //紀錄點
                 if (Physics.Raycast(sgRay, out sgHit, maxRayDistance, layerMask))
-                {
-                    sHit = sgHit.normal;                                                //射線命中的向量點
-                    sHit2 = sgHit.point;                                                //設限命中的點
-                    rotate = bulletHoleRotate(sHit);                                    //會去使用這個含式來看彈孔要怎麼顯示(旋轉)到正確位置
-                    GameObject bh = Instantiate(bulletHole, sHit2, rotate);             //生成彈孔在雷射打到的位置上
+                {                                            
+                    rotate = bulletHoleRotate(sgHit.normal);                                    //會去使用這個含式來看彈孔要怎麼顯示(旋轉)到正確位置
+                    GameObject bh = Instantiate(bulletHole, sgHit.point, rotate);             //生成彈孔在雷射打到的位置上
                     bh.transform.SetParent(sgHit.collider.transform);                   //設定彈孔物件會變成打到的那個物件的子物件，這樣彈孔就會跟著物件移動了。
                     Destroy(bh, 10f);                                                   //設定彈孔殘留時間
                 }
