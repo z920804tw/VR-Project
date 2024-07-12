@@ -10,6 +10,7 @@ public class TargetDmgUI : MonoBehaviour
     void Start()
     {
         transform.LookAt(GameObject.FindGameObjectWithTag("Player").transform);
+        StartCoroutine(dmgTextMoveUP());
     }
 
     // Update is called once per frame
@@ -28,7 +29,6 @@ public class TargetDmgUI : MonoBehaviour
             this.transform.position+=transform.up*upSpeed;
             yield return null;
         }
-        timer = 0;
         Destroy(this.gameObject);
     }
 }

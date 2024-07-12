@@ -19,9 +19,9 @@ public class TargetBodySetting : MonoBehaviour
     public float upTimeLimit;
     public float upSpeed;                       //建議不要太高大概0.01左右
 
-    public int maxDmg;
-    public int minDmg;
     int rndDmg;
+
+    GameObject currentHitBullet;
     void Start()
     {
 
@@ -37,13 +37,23 @@ public class TargetBodySetting : MonoBehaviour
     {
         if (other.gameObject.tag == "Bullet")
         {
-            if (bodyType == BodyType.Head)
+            currentHitBullet = other.gameObject;
+            switch (other.gameObject.GetComponent<Bullet>().gunType)    //判斷子彈的類型是哪種
             {
-                takeDmg(minDmg, maxDmg);
-            }
-            else if (bodyType == BodyType.Body)
-            {
-                takeDmg(minDmg, maxDmg);
+                case GunType.Rifle:
+                    RifleDmgSetting();
+                    break;
+                case GunType.Pistol:
+                    PistolDmgSetting();
+                    break;
+                case GunType.SMG:
+                    SmgDmgSetting();
+                    break;
+                case GunType.Shotgun:
+                    ShotgunDmgSetting();
+                    break;
+                default:
+                    break;
             }
 
         }
@@ -52,20 +62,74 @@ public class TargetBodySetting : MonoBehaviour
 
     void takeDmg(int min, int max)
     {
-        rndDmg = Random.Range(min, max);
-        GameObject parent = transform.parent.GetComponent<TargetSetting>().dmg_UI;
+        rndDmg = Random.Range(min, max);                                                    //抓要生成的文字框物件
+        GameObject parent = transform.parent.GetComponent<TargetSetting>().dmg_UI;          
 
-        Vector3 randomSpread = Random.insideUnitSphere * 0.5f;
+
+        Vector3 randomSpread = Random.insideUnitSphere * 0.5f;                              //文字框的生成位置
         Vector3 pos = dmgUITransform.position + randomSpread;
 
-        GameObject dmg = Instantiate(parent, pos, Quaternion.identity);
+        GameObject dmg = Instantiate(parent, pos, Quaternion.identity);                     //生成文字框出來
         dmg.transform.SetParent(this.transform);
+        dmg.GetComponentInChildren<TextMeshProUGUI>().text = $"-{rndDmg}";                  //設定他的文字為受到的隨機傷害值
 
-        StartCoroutine(dmg.GetComponent<TargetDmgUI>().dmgTextMoveUP());
-        parent.GetComponentInChildren<TextMeshProUGUI>().text = $"-{rndDmg}";
-        transform.parent.GetComponent<TargetSetting>().TargetHP -= rndDmg;
+        transform.parent.GetComponent<TargetSetting>().TargetHP -= rndDmg;                  //扣除本體的總HP
+
 
     }
 
+    void RifleDmgSetting()
+    {
+        int maxDmg = currentHitBullet.GetComponent<Bullet>().MaxDmg;
+        int minDmg = currentHitBullet.GetComponent<Bullet>().MinDmg;
+        if (this.bodyType == BodyType.Head)
+        {
+            takeDmg(minDmg + 30, maxDmg + 30);
+        }
+        else if (this.bodyType == BodyType.Body)
+        {
+            takeDmg(minDmg, maxDmg);
+        }
+    }
+
+    void PistolDmgSetting()
+    {
+        int maxDmg = currentHitBullet.GetComponent<Bullet>().MaxDmg;
+        int minDmg = currentHitBullet.GetComponent<Bullet>().MinDmg;
+        if (this.bodyType == BodyType.Head)
+        {
+            takeDmg(minDmg + 30, maxDmg + 30);
+        }
+        else if (this.bodyType == BodyType.Body)
+        {
+            takeDmg(minDmg, maxDmg);
+        }
+    }
+    void SmgDmgSetting()
+    {
+        int maxDmg = currentHitBullet.GetComponent<Bullet>().MaxDmg;
+        int minDmg = currentHitBullet.GetComponent<Bullet>().MinDmg;
+        if (this.bodyType == BodyType.Head)
+        {
+            takeDmg(minDmg + 20, maxDmg + 30);
+        }
+        else if (this.bodyType == BodyType.Body)
+        {
+            takeDmg(minDmg, maxDmg);
+        }
+    }
+    void ShotgunDmgSetting()
+    {
+        int maxDmg = currentHitBullet.GetComponent<Bullet>().MaxDmg;
+        int minDmg = currentHitBullet.GetComponent<Bullet>().MinDmg;
+        if (this.bodyType == BodyType.Head)
+        {
+            takeDmg(minDmg + 40, maxDmg + 50);
+        }
+        else if (this.bodyType == BodyType.Body)
+        {
+            takeDmg(minDmg, maxDmg);
+        }
+    }
 
 }
