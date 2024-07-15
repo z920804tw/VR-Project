@@ -40,8 +40,9 @@ public class TurnControlSetting : MonoBehaviour
 
             continuousTurn.enabled = false;
             snapTurn.enabled = false;
-            Invoke("enableTurnControl", 1f);
+
             currentMode = 0;
+            Invoke("enableTurnControl", 1f);
 
         }
         else if (i == 1)
@@ -50,9 +51,11 @@ public class TurnControlSetting : MonoBehaviour
             turnAngleUI.SetActive(true);
 
             continuousTurn.enabled = false;
-            snapTurn.enabled = true;
+            snapTurn.enabled = false;
+
 
             currentMode = 1;
+            Invoke("enableTurnControl", 1f);
         }
     }
 
@@ -75,12 +78,10 @@ public class TurnControlSetting : MonoBehaviour
         if (currentMode == 0)
         {
             continuousTurn.enabled = true;
-            snapTurn.enabled = false;
         }
         else if (currentMode == 1)
         {
-            continuousTurn.enabled=false;
-            snapTurn.enabled=true;  
+            snapTurn.enabled = true;
         }
     }
 
