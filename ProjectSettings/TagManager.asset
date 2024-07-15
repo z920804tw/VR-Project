@@ -8,6 +8,7 @@ TagManager:
   - Clip
   - Gun
   - Bullet
+  - Knife
   layers:
   - Default
   - TransparentFX

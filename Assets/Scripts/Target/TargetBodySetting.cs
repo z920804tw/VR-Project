@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEditor.Search;
 using UnityEngine;
@@ -60,10 +61,21 @@ public class TargetBodySetting : MonoBehaviour
 
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Knife")
+        {
+            KnifeDmgSetting(other.gameObject);
+
+
+        }
+    }
+
+
     void takeDmg(int min, int max)
     {
         rndDmg = Random.Range(min, max);                                                    //抓要生成的文字框物件
-        GameObject parent = transform.parent.GetComponent<TargetSetting>().dmg_UI;          
+        GameObject parent = transform.parent.GetComponent<TargetSetting>().dmg_UI;
 
 
         Vector3 randomSpread = Random.insideUnitSphere * 0.5f;                              //文字框的生成位置
@@ -132,4 +144,18 @@ public class TargetBodySetting : MonoBehaviour
         }
     }
 
+    void KnifeDmgSetting(GameObject other)
+    {
+        int maxDmg = other.GetComponent<WeaponKnife>().maxDmg;
+        int minDmg = other.GetComponent<WeaponKnife>().minDmg;
+
+        if (this.bodyType == BodyType.Head)
+        {
+            takeDmg(minDmg + 20, maxDmg + 30);
+        }
+        else if (this.bodyType == BodyType.Body)
+        {
+            takeDmg(minDmg,maxDmg);
+        }
+    }
 }
