@@ -41,11 +41,13 @@ public class WeaponKnife : MonoBehaviour
         if (Physics.Raycast(ray, out hit, maxDistance, layerMask))
         {
             currentHitObject = hit.collider.gameObject;
-            if (hasSpawnMark == false)
+            if (hasSpawnMark == false && currentHitObject.gameObject.tag!="Enemy")
             {
                 hasSpawnMark = true;
                 Quaternion rotate=KnifeMarkRotate(hit.normal);
                 GameObject km=Instantiate(knifeMarkPrefab,hit.point,rotate);
+
+                km.transform.SetParent(hit.collider.transform);
                 Destroy(km,10f);
             }
         }

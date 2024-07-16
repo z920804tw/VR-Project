@@ -23,9 +23,10 @@ public class TargetBodySetting : MonoBehaviour
     int rndDmg;
 
     GameObject currentHitBullet;
+    TargetSetting parent;
     void Start()
     {
-
+        parent = transform.parent.GetComponent<TargetSetting>();
     }
 
     // Update is called once per frame
@@ -39,6 +40,11 @@ public class TargetBodySetting : MonoBehaviour
         if (other.gameObject.tag == "Bullet")
         {
             currentHitBullet = other.gameObject;
+            if (parent.enemyType != EnemyType.Target&& parent.isDead==false)
+            {
+                parent.anim.SetTrigger("hit");
+            }
+
             switch (other.gameObject.GetComponent<Bullet>().gunType)    //判斷子彈的類型是哪種
             {
                 case GunType.Rifle:
@@ -65,6 +71,10 @@ public class TargetBodySetting : MonoBehaviour
     {
         if (other.gameObject.tag == "Knife")
         {
+            if (parent.enemyType != EnemyType.Target && parent.isDead==false)
+            {
+                parent.anim.SetTrigger("hit");
+            }
             KnifeDmgSetting(other.gameObject);
 
 
@@ -155,7 +165,7 @@ public class TargetBodySetting : MonoBehaviour
         }
         else if (this.bodyType == BodyType.Body)
         {
-            takeDmg(minDmg,maxDmg);
+            takeDmg(minDmg, maxDmg);
         }
     }
 }
