@@ -114,7 +114,7 @@ public class TargetSetting : MonoBehaviour
                 else
                 {
                     navAgent.isStopped = true;
-                    isHit = true;
+                    
                 }
 
             }
