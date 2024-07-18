@@ -68,6 +68,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bodyType: 2
   dmgUITransform: {fileID: 6082092295690700581}
+  parent: {fileID: 8342730292418458501}
   upTimeLimit: 2
   upSpeed: 0.01
 --- !u!1 &1499369448143136036
@@ -169,6 +170,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bodyType: 1
   dmgUITransform: {fileID: 6082092295690700581}
+  parent: {fileID: 8342730292418458501}
   upTimeLimit: 2
   upSpeed: 0.01
 --- !u!1 &3112013622393333269
@@ -302,9 +304,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 636c23d4663ae044297087074aa37d4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyType: 2
+  enemyType: 3
   TargetHP: 10000
   targetPos: {fileID: 0}
   navAgent: {fileID: 0}
   anim: {fileID: 0}
+  isDead: 0
   dmg_UI: {fileID: 4846246159750435948, guid: 71baa9fba78e49f489848e21a4937814, type: 3}

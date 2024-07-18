@@ -580,6 +580,7 @@ MonoBehaviour:
   lineRenderer: {fileID: 1288266348515665033}
   shootEffect: {fileID: 1336949550903370, guid: 4543ab5e3d405ec40a8d4e9aa5165030,
     type: 3}
+  fireLight: {fileID: 0}
   bulletHole: {fileID: 3533695193621778029, guid: 03843d3c125ea584fa0f4304af47b716,
     type: 3}
   GunUI: {fileID: 8070722135117193383}

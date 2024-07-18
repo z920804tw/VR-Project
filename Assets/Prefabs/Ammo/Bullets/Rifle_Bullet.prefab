@@ -147,3 +147,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gunType: 1
+  MaxDmg: 0
+  MinDmg: 0

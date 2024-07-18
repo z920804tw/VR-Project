@@ -14,19 +14,21 @@ public enum BodyType
 }
 public class TargetBodySetting : MonoBehaviour
 {
-    // Start is called before the first frame update
+    // Start is called before the first frame update\
+    [Header("物件參數設定")]
     public BodyType bodyType;
     public Transform dmgUITransform;
+    public TargetSetting parent;
     public float upTimeLimit;
     public float upSpeed;                       //建議不要太高大概0.01左右
 
     int rndDmg;
 
     GameObject currentHitBullet;
-    TargetSetting parent;
+
     void Start()
     {
-        parent = transform.parent.GetComponent<TargetSetting>();
+
     }
 
     // Update is called once per frame
@@ -40,7 +42,9 @@ public class TargetBodySetting : MonoBehaviour
         if (other.gameObject.tag == "Bullet")
         {
             currentHitBullet = other.gameObject;
-            if (parent.enemyType != EnemyType.Target&& parent.isDead==false)
+            parent.isHit = true;
+
+            if (parent.enemyType != EnemyType.Target && parent.isDead == false)
             {
                 parent.anim.SetTrigger("hit");
             }
@@ -71,31 +75,35 @@ public class TargetBodySetting : MonoBehaviour
     {
         if (other.gameObject.tag == "Knife")
         {
-            if (parent.enemyType != EnemyType.Target && parent.isDead==false)
+            if (parent.enemyType != EnemyType.Target && parent.isDead == false)
             {
+                parent.isHit = true;
                 parent.anim.SetTrigger("hit");
             }
             KnifeDmgSetting(other.gameObject);
-
-
         }
+
     }
 
 
     void takeDmg(int min, int max)
     {
         rndDmg = Random.Range(min, max);                                                    //抓要生成的文字框物件
-        GameObject parent = transform.parent.GetComponent<TargetSetting>().dmg_UI;
+        GameObject parentUI = parent.dmg_UI;
 
 
         Vector3 randomSpread = Random.insideUnitSphere * 0.5f;                              //文字框的生成位置
         Vector3 pos = dmgUITransform.position + randomSpread;
 
-        GameObject dmg = Instantiate(parent, pos, Quaternion.identity);                     //生成文字框出來
-        dmg.transform.SetParent(this.transform);
+        GameObject dmg = Instantiate(parentUI, pos, Quaternion.identity);                     //生成文字框出來
+        dmg.transform.SetParent(dmgUITransform.transform);
         dmg.GetComponentInChildren<TextMeshProUGUI>().text = $"-{rndDmg}";                  //設定他的文字為受到的隨機傷害值
 
-        transform.parent.GetComponent<TargetSetting>().TargetHP -= rndDmg;                  //扣除本體的總HP
+        TargetDmgUI dmgUI = dmg.GetComponent<TargetDmgUI>();                                  //設定文字的上升速度跟時間限制
+        dmgUI.upSpeed = upSpeed;
+        dmgUI.upTimeLimit = upTimeLimit;
+
+        parent.TargetHP -= rndDmg;                  //扣除本體的總HP
 
 
     }

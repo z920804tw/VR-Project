@@ -6,11 +6,17 @@ public class TargetDmgUI : MonoBehaviour
 {
     // Start is called before the first frame update
     float timer;
+    public float upTimeLimit, upSpeed;
+
 
     void Start()
     {
         transform.LookAt(GameObject.FindGameObjectWithTag("Player").transform);
-        StartCoroutine(dmgTextMoveUP());
+        if (upSpeed != 0 && upTimeLimit != 0)
+        {
+            StartCoroutine(dmgTextMoveUP());
+        }
+
     }
 
     // Update is called once per frame
@@ -21,12 +27,11 @@ public class TargetDmgUI : MonoBehaviour
     public IEnumerator dmgTextMoveUP()
     {
         timer = 0;
-        float upTimeLimit = transform.parent.GetComponent<TargetBodySetting>().upTimeLimit;
-        float upSpeed = transform.parent.GetComponent<TargetBodySetting>().upSpeed;
+
         while (timer < upTimeLimit)
         {
             timer += Time.deltaTime;
-            this.transform.position+=transform.up*upSpeed;
+            this.transform.position += transform.up * upSpeed;
             yield return null;
         }
         Destroy(this.gameObject);

@@ -6,7 +6,6 @@ public class Bullet : MonoBehaviour
 {
     // Start is called before the first frame update
     public GunType gunType;
-
     public int MaxDmg;
     public int MinDmg;
     void Start()
@@ -23,6 +22,7 @@ public class Bullet : MonoBehaviour
     {
         if (other.collider.tag != "Gun"&& other.collider.tag!="Bullet")
         {
+
             Destroy(this.gameObject);
         }
     }
