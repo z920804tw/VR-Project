@@ -304,10 +304,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 636c23d4663ae044297087074aa37d4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyType: 3
-  TargetHP: 10000
+  TargetType: 3
   targetPos: {fileID: 0}
+  defaultTarget: {fileID: 0}
+  rayPos: {fileID: 0}
   navAgent: {fileID: 0}
   anim: {fileID: 0}
-  isDead: 0
+  TargetHP: 10000
+  maxRayDistance: 0
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 0
   dmg_UI: {fileID: 4846246159750435948, guid: 71baa9fba78e49f489848e21a4937814, type: 3}
+  isDead: 0
+  isHit: 0

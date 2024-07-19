@@ -9,6 +9,8 @@ TagManager:
   - Gun
   - Bullet
   - Knife
+  - EnemyHand
+  - Object
   layers:
   - Default
   - TransparentFX
@@ -19,7 +21,7 @@ TagManager:
   - Ground
   - Object
   - Player
-  - Gun
+  - 
   - Enemy
   - 
   - 
