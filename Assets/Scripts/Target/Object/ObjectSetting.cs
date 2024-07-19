@@ -10,6 +10,8 @@ public class ObjectSetting : MonoBehaviour
     public int objectHp;
     public Transform dmgUITransform;
     public GameObject dmgUI;
+    public GameObject aa;
+    
     void Start()
     {
 
@@ -23,6 +25,7 @@ public class ObjectSetting : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
+
 
 
 
