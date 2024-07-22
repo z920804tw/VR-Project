@@ -154,7 +154,7 @@ public class WeaponGun : MonoBehaviour
 
     void InstantiateBullet()
     {
-        Vector3 gunSpread = Random.insideUnitCircle * spread;               //子彈、設限的隨機方向
+        Vector3 gunSpread = Random.insideUnitSphere * spread;               //子彈、設限的隨機方向
         Vector3 dir = firePos.forward + gunSpread;
 
         Ray ray = new Ray(firePos.position, dir);

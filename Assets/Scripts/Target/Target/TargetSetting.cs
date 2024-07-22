@@ -22,7 +22,7 @@ public class TargetSetting : MonoBehaviour
     public TargetType TargetType;
     Transform targetPos;
     public Transform defaultTarget;
-    public Transform rayPos;
+    public Transform[] rayPos;
     public NavMeshAgent navAgent;
 
     public Animator anim;
@@ -85,7 +85,7 @@ public class TargetSetting : MonoBehaviour
                 break;
 
             default:
-            break;
+                break;
 
         }
 
@@ -94,13 +94,17 @@ public class TargetSetting : MonoBehaviour
     void FindTarget()                                               //只要指定的物件進到射線範圍內，就會去設定目標。
     {
 
-        Ray ray = new Ray(rayPos.position, rayPos.forward);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, maxRayDistance, layerMask))
+        for (int i = 0; i < 2; i++)
         {
-            targetPos = hit.collider.transform;
+            Ray ray = new Ray(rayPos[i].position, rayPos[i].forward);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, maxRayDistance, layerMask))
+            {
+                targetPos = hit.collider.transform;
+            }
+            Debug.DrawRay(rayPos[i].position, rayPos[i].forward * maxRayDistance, Color.red);
         }
-        Debug.DrawRay(rayPos.position, rayPos.forward * maxRayDistance, Color.red);
+
     }
 
     void EnemySetting()
