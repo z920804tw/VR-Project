@@ -26,18 +26,18 @@ public class ObjectSetting : MonoBehaviour
     [Header("Debug")]
     [SerializeField] bool canPlace;
     [SerializeField] bool hasPreview;
-    [SerializeField] bool isHolding;
+    public bool isHolding;
 
 
     GameObject hand;
 
     GameObject aa;
     Vector3 scale;
-    Vector3 objectRotate;
     Vector3 hitPoint;
-
+    Outline outline;
     ContinuousMoveProviderBase move;
     float preSpeed;
+
 
 
     void Start()
@@ -46,13 +46,14 @@ public class ObjectSetting : MonoBehaviour
         canPlace = false;
         hasPreview = false;
         move = GameObject.Find("Move").GetComponent<ContinuousMoveProviderBase>();
-        preSpeed = move.moveSpeed;
+        outline = GetComponent<Outline>();
+        //preSpeed = move.moveSpeed;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (objectHp <= 0)                              //當HP小於0就摧毀物件
+        if (objectHp <= 0 && gameObject.tag == "Object")                              //當HP小於0就摧毀物件
         {
             Destroy(this.gameObject);
         }
@@ -63,10 +64,6 @@ public class ObjectSetting : MonoBehaviour
         }
 
     }
-
-
-
-
     public void takeDmg(int minDmg, int maxDmg)         //給攻擊動畫用的
     {
         int rndDmg = Random.Range(minDmg, maxDmg);
@@ -91,6 +88,10 @@ public class ObjectSetting : MonoBehaviour
             isHolding = true;
             scale = transform.localScale;
             transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+            preSpeed = move.moveSpeed;
+
+            outline.enabled = true;
+
 
         }
         else                            //如果isHolding為true時，會會重製所有基本設定，並角色移動速度、物件縮放、都會恢復之前的值。放開物件時用到
@@ -108,6 +109,7 @@ public class ObjectSetting : MonoBehaviour
             {
                 Destroy(aa);
             }
+            outline.enabled = false;
             Debug.Log("放開手中物件");
         }
     }
@@ -116,7 +118,7 @@ public class ObjectSetting : MonoBehaviour
     {
         Ray ray = new Ray(hand.transform.position + hand.transform.forward * 0.2f, hand.transform.forward); //會有一條設限從手部的位置向前發射
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, maxDistance, layerMask))  
+        if (Physics.Raycast(ray, out hit, maxDistance, layerMask))
         {
             if (hasPreview == false)    //如果有打到指定的layerMask，就會有一個初始化的設定，這個只會執行一次。
             {
@@ -171,11 +173,17 @@ public class ObjectSetting : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.tag == "Hand" && isHolding == true && hand == null)
+        if (other.gameObject.tag == "Hand")
         {
             hand = other.gameObject;
         }
     }
-
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Hand" && hand != null)
+        {
+            hand = null;
+        }
+    }
 
 }
