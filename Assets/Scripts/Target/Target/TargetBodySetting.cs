@@ -43,9 +43,9 @@ public class TargetBodySetting : MonoBehaviour
         if (other.gameObject.tag == "Bullet")
         {
             currentHitBullet = other.gameObject;
-            
 
-            if (parent.TargetType != TargetType.Target  && parent.isDead == false)
+
+            if (parent.TargetType != TargetType.Target && parent.isDead == false)
             {
                 parent.isHit = true;
                 parent.anim.SetTrigger("hit");
@@ -65,6 +65,9 @@ public class TargetBodySetting : MonoBehaviour
                 case GunType.Shotgun:
                     ShotgunDmgSetting();
                     break;
+                case GunType.Turret:
+                    TurretDmgSetting();
+                    break;
                 default:
                     break;
             }
@@ -77,7 +80,7 @@ public class TargetBodySetting : MonoBehaviour
     {
         if (other.gameObject.tag == "Knife")
         {
-            if (parent.TargetType != TargetType.Target  && parent.isDead == false)
+            if (parent.TargetType != TargetType.Target && parent.isDead == false)
             {
                 parent.isHit = true;
                 parent.anim.SetTrigger("hit");
@@ -163,6 +166,13 @@ public class TargetBodySetting : MonoBehaviour
         {
             takeDmg(minDmg, maxDmg);
         }
+    }
+
+    void TurretDmgSetting()
+    {
+        int maxDmg=currentHitBullet.GetComponent<Bullet>().MaxDmg;
+        int minDmg=currentHitBullet.GetComponent<Bullet>().MinDmg;
+        takeDmg(minDmg, maxDmg);
     }
 
     void KnifeDmgSetting(GameObject other)

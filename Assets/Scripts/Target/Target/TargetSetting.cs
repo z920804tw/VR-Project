@@ -21,6 +21,7 @@ public class TargetSetting : MonoBehaviour
     [Header("目標設定")]
     public TargetType TargetType;
     Transform targetPos;
+    public Transform targetCenter;
     public Transform defaultTarget;
     public Transform[] rayPos;
     public NavMeshAgent navAgent;
@@ -29,6 +30,7 @@ public class TargetSetting : MonoBehaviour
     [Header("目標參數設定")]
     public int TargetHP;
     public float maxRayDistance;
+    public float turnSpeed;
 
     public LayerMask layerMask;
 
@@ -44,8 +46,6 @@ public class TargetSetting : MonoBehaviour
 
     void Start()
     {
-        //navAgent = GetComponent<NavMeshAgent>();
-        // anim = GetComponent<Animator>();
         isDead = false;
         isHit = false;
 
@@ -168,7 +168,7 @@ public class TargetSetting : MonoBehaviour
         Vector3 dir = targetPos.position - transform.position;
         dir.y = 0;
         Quaternion TargetRotation = Quaternion.LookRotation(dir);
-        transform.rotation = Quaternion.Lerp(transform.rotation, TargetRotation, 0.1f * Time.deltaTime);
+        transform.rotation = Quaternion.Slerp(transform.rotation, TargetRotation, turnSpeed * Time.deltaTime);
     }
 
 

@@ -131,3 +131,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40cb06f47f3e3844490fb34028689e2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duringTime: 0.5
+  lightStrength: 3.5

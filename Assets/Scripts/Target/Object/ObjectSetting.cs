@@ -47,7 +47,6 @@ public class ObjectSetting : MonoBehaviour
         hasPreview = false;
         move = GameObject.Find("Move").GetComponent<ContinuousMoveProviderBase>();
         outline = GetComponent<Outline>();
-        //preSpeed = move.moveSpeed;
     }
 
     // Update is called once per frame
@@ -125,12 +124,9 @@ public class ObjectSetting : MonoBehaviour
                 hasPreview = true;
                 aa = Instantiate(objectPrefab, hit.point, Quaternion.identity);
                 move.moveSpeed = 0;
-                //Debug.Log("生成預覽物件");
-
             }
             else if (hasPreview == true)    //之後會一直執行這邊，會一直修改預覽物件的位置到hitpoint上。
             {
-                //Debug.Log("此地方可放置手中物件");
                 canPlace = true;
                 hitPoint = hit.point;
                 aa.transform.position = hit.point;

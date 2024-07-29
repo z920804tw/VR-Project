@@ -15,6 +15,7 @@ public enum GunType
     Sniper,
     Pistol,
     SMG,
+    Turret,
 }
 public class WeaponGun : MonoBehaviour
 {
