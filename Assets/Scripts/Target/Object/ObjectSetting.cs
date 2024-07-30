@@ -15,29 +15,31 @@ public class ObjectSetting : MonoBehaviour
     [Header("物件設定")]
     public GameObject dmgUI;
     public GameObject objectPrefab;
+    public GameObject deadEffect;
     public LayerMask layerMask;
 
     [Header("物件參數設定")]
     public int objectHp;
-    public float maxDistance;
-
+    public float placeMaxDistance;
     public InputActionReference leftHandRotate;
 
     [Header("Debug")]
+
     [SerializeField] bool canPlace;
     [SerializeField] bool hasPreview;
     public bool isHolding;
+    bool isDead;
 
 
+    //內部參數
     GameObject hand;
-
     GameObject aa;
     Vector3 scale;
     Vector3 hitPoint;
     Outline outline;
     ContinuousMoveProviderBase move;
     float preSpeed;
-
+    //內部參數
 
 
     void Start()
@@ -45,6 +47,7 @@ public class ObjectSetting : MonoBehaviour
         isHolding = false;
         canPlace = false;
         hasPreview = false;
+        isDead = false;
         move = GameObject.Find("Move").GetComponent<ContinuousMoveProviderBase>();
         outline = GetComponent<Outline>();
     }
@@ -52,15 +55,27 @@ public class ObjectSetting : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (objectHp <= 0 && gameObject.tag == "Object")                              //當HP小於0就摧毀物件
+
+        if (objectHp > 0)
         {
-            Destroy(this.gameObject);
+            if (isHolding == true && hand != null)          //isHolding為true並且有取得到hand物件，就執行顯示預覽放置物件位置功能。
+            {
+                ShowObjectPreview();
+            }
+        }
+        else if (objectHp < 0)
+        {
+            if (isDead == false)
+            {
+                isDead = true;
+                GameObject eft = Instantiate(deadEffect, transform.position, Quaternion.identity);
+                Destroy(eft,2f);
+                Destroy(this.gameObject, 1f);
+            }
+
         }
 
-        if (isHolding == true && hand != null)          //isHolding為true並且有取得到hand物件，就執行顯示預覽放置物件位置功能。
-        {
-            ShowObjectPreview();
-        }
+
 
     }
     public void takeDmg(int minDmg, int maxDmg)         //給攻擊動畫用的
@@ -117,7 +132,7 @@ public class ObjectSetting : MonoBehaviour
     {
         Ray ray = new Ray(hand.transform.position + hand.transform.forward * 0.2f, hand.transform.forward); //會有一條設限從手部的位置向前發射
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, maxDistance, layerMask))
+        if (Physics.Raycast(ray, out hit, placeMaxDistance, layerMask))
         {
             if (hasPreview == false)    //如果有打到指定的layerMask，就會有一個初始化的設定，這個只會執行一次。
             {
@@ -150,7 +165,7 @@ public class ObjectSetting : MonoBehaviour
             Debug.Log("無法放置");
         }
 
-        Debug.DrawRay(hand.transform.position, hand.transform.forward * maxDistance, Color.red);
+        Debug.DrawRay(hand.transform.position, hand.transform.forward * placeMaxDistance, Color.red);
     }
     public void PlaceObject()       //當玩家在拿著物件時，按下板機鍵就會執行這邊，會去將手上的物件放下，並將她的位置、旋轉指定到對應的位置上。
     {
@@ -169,7 +184,7 @@ public class ObjectSetting : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.tag == "Hand" && hand==null)
+        if (other.gameObject.tag == "Hand" && hand == null)
         {
             hand = other.gameObject;
         }

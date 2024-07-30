@@ -14,13 +14,14 @@ public class TurretSetting : MonoBehaviour
     public GameObject fireLight;
     public Transform rayPos;
     public Transform firePos;
-    public Animator anim;
+    Animator anim;
 
     public LayerMask layerMask;
     [Header("音效設定")]
     public AudioSource audioSource;
     public AudioClip shootClip;
     public AudioClip turnClip;
+    public AudioClip deadClip;
 
     [Header("砲塔參數設定")]
 
@@ -36,67 +37,83 @@ public class TurretSetting : MonoBehaviour
     [SerializeField] bool isHolding;
     bool reset;
     float timer;
+    bool isDead;
+    ObjectSetting objSetting;
 
 
 
     void Start()
     {
         reset = false;
+        isDead=false;
+        anim = GetComponent<Animator>();
+        objSetting = GetComponent<ObjectSetting>();
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        isHolding = GetComponent<ObjectSetting>().isHolding;
-        if (isHolding == false)
+        if (objSetting.objectHp > 0)
         {
-            if (target == null)
+            isHolding = objSetting.isHolding;
+            if (isHolding == false)
             {
-                if (reset == false)
+                if (target == null)
                 {
-                    reset = true;
-                    turretBody.transform.localEulerAngles = new Vector3(0, 0, 0);
+                    if (reset == false)
+                    {
+                        reset = true;
+                        turretBody.transform.localEulerAngles = new Vector3(0, 0, 0);
 
-                    audioSource.clip = turnClip;
-                    audioSource.loop = true;
-                    audioSource.Play();
+                        audioSource.clip = turnClip;
+                        audioSource.loop = true;
+                        audioSource.Play();
+                    }
+                    SearchTarget();
+                    anim.SetBool("attack", false);
+                    anim.SetBool("search", true);
                 }
-                SearchTarget();
-                anim.SetBool("attack", false);
-                anim.SetBool("search", true);
+                else if (target != null)
+                {
+                    anim.SetBool("search", false);
+                    StopSound();
+                    Shoot();
+                    reset = false;
+
+
+                    Vector3 dir = target.GetComponent<TargetSetting>().targetCenter.transform.position - turretBody.transform.position;
+                    Quaternion targetRotation = Quaternion.LookRotation(dir);
+                    turretBody.transform.rotation = Quaternion.Slerp(turretBody.transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
+
+
+                    if (target.GetComponent<TargetSetting>().isDead)
+                    {
+                        target = null;
+                    }
+                }
             }
-            else if (target != null)
+            else if (isHolding == true)
             {
                 anim.SetBool("search", false);
+                anim.SetBool("attack", false);
+
                 StopSound();
-                Shoot();
+
                 reset = false;
+                target = null;
 
-
-                Vector3 dir = target.GetComponent<TargetSetting>().targetCenter.transform.position - turretBody.transform.position;
-                Quaternion targetRotation = Quaternion.LookRotation(dir);
-                turretBody.transform.rotation = Quaternion.Slerp(turretBody.transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
-
-
-                if (target.GetComponent<TargetSetting>().isDead)
-                {
-                    target = null;
-                }
+                anim.Play("idle");
+            }
+        }
+        else
+        {
+            if (isDead == false)
+            {
+                isDead=true;
+                audioSource.PlayOneShot(deadClip);
             }
 
-        }
-        else if (isHolding == true)
-        {
-            anim.SetBool("search", false);
-            anim.SetBool("attack", false);
-
-            StopSound();
-
-            reset = false;
-            target = null;
-
-            anim.Play("idle");
         }
     }
 

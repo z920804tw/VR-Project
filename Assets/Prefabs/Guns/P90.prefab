@@ -539,13 +539,15 @@ MonoBehaviour:
   minDmg: 5
   layerMask:
     serializedVersion: 2
-    m_Bits: 192
+    m_Bits: 2240
   fireDelay: 0.15
   bulletSpeed: 50
   maxRayDistance: 45
   spread: 0.015
   lineRenderer: {fileID: 6947027841706265456}
   shootEffect: {fileID: 1336949550903370, guid: 4543ab5e3d405ec40a8d4e9aa5165030,
+    type: 3}
+  fireLight: {fileID: 9010431219250764728, guid: 0bf57fc935504e9439751ef69a336632,
     type: 3}
   bulletHole: {fileID: 3533695193621778029, guid: 03843d3c125ea584fa0f4304af47b716,
     type: 3}

@@ -31,7 +31,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3943262170393822779}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 29.79, y: 1.0200989, z: 5.64}
   m_LocalScale: {x: 0.36, y: 0.36, z: 0.36}
   m_ConstrainProportionsScale: 1
@@ -341,11 +341,13 @@ MonoBehaviour:
   dmgUI: {fileID: 4846246159750435948, guid: 71baa9fba78e49f489848e21a4937814, type: 3}
   objectPrefab: {fileID: 6794173904359070358, guid: 2037ca36a7b393f438cfa8b336df1a3a,
     type: 3}
+  deadEffect: {fileID: 9157105887711914197, guid: c4f829cb7dd4b864caf8832ec5b1ee55,
+    type: 3}
   layerMask:
     serializedVersion: 2
     m_Bits: 2240
   objectHp: 300
-  maxDistance: 6
+  placeMaxDistance: 5
   leftHandRotate: {fileID: 1010738217276881514, guid: c348712bda248c246b8c49b3db54643f,
     type: 3}
   canPlace: 0

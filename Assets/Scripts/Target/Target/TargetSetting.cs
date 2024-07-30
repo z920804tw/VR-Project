@@ -31,6 +31,8 @@ public class TargetSetting : MonoBehaviour
     public int TargetHP;
     public float maxRayDistance;
     public float turnSpeed;
+    public int maxDmg;
+    public int minDmg;
 
     public LayerMask layerMask;
 
@@ -178,7 +180,7 @@ public class TargetSetting : MonoBehaviour
         {
             if (targetPos.gameObject.tag == "Object")                   //如果targetPos的tag是物件，就去抓她的ObjectSetting裡面的takeDmg
             {
-                targetPos.GetComponent<ObjectSetting>().takeDmg(15, 35);
+                targetPos.GetComponent<ObjectSetting>().takeDmg(minDmg, maxDmg);
             }
             else if (targetPos.gameObject.tag == "Player")
             {

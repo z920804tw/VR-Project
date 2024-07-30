@@ -404,11 +404,13 @@ MonoBehaviour:
   dmgUI: {fileID: 4846246159750435948, guid: 71baa9fba78e49f489848e21a4937814, type: 3}
   objectPrefab: {fileID: 7677094087514871660, guid: e30e6ddf6dffd444c869884ba4cff0ca,
     type: 3}
+  deadEffect: {fileID: 9157105887711914197, guid: c4f829cb7dd4b864caf8832ec5b1ee55,
+    type: 3}
   layerMask:
     serializedVersion: 2
     m_Bits: 2240
   objectHp: 200
-  maxDistance: 6
+  placeMaxDistance: 5
   leftHandRotate: {fileID: 1010738217276881514, guid: c348712bda248c246b8c49b3db54643f,
     type: 3}
   canPlace: 0
