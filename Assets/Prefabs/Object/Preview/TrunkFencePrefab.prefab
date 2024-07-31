@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 4242497156147173919}
   - component: {fileID: 4804545152541323}
   - component: {fileID: 7981247016184064826}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: TrunkFencePrefab
-  m_TagString: Object
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

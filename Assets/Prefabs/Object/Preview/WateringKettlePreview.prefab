@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 529415801224315576}
   - component: {fileID: 1147848130417078401}
   - component: {fileID: 4964298141796221309}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: WateringKettlePreview
   m_TagString: Untagged
   m_Icon: {fileID: 0}
