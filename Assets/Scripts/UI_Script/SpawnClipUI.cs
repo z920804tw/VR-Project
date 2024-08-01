@@ -8,7 +8,7 @@ public class SpawnClipUI : MonoBehaviour
     // Start is called before the first frame update
     public TMP_Dropdown tMP_Dropdown;
     public Transform spawnTransform;
-    public GameObject rifleClip,smgClip,pistolClip,shotgunClip;
+    public GameObject[] ammoClip;
 
 
     void Start()
@@ -21,22 +21,22 @@ public class SpawnClipUI : MonoBehaviour
     {
 
     }
-    public void SpawnClip()
+    public void BuyClip()
     {
         string currnetSelect = tMP_Dropdown.options[tMP_Dropdown.value].text.ToString();
         switch (currnetSelect)
         {
-            case "步槍彈藥":
-                Instantiate(rifleClip, spawnTransform.position,Quaternion.identity);
+            case "手槍彈藥":
+                Instantiate(ammoClip[0], spawnTransform.position,Quaternion.identity);
             break;
             case "衝鋒槍彈藥":
-                Instantiate(smgClip, spawnTransform.position, Quaternion.identity);
+                Instantiate(ammoClip[1], spawnTransform.position, Quaternion.identity);
             break;
-            case"手槍彈藥":
-                Instantiate(pistolClip,spawnTransform.position, Quaternion.identity);
+            case"步槍彈藥":
+                Instantiate(ammoClip[2],spawnTransform.position, Quaternion.identity);
             break;
             case"霰彈槍彈藥":
-                Instantiate(shotgunClip,spawnTransform.position, Quaternion.identity);
+                Instantiate(ammoClip[3],spawnTransform.position, Quaternion.identity);
             break;
             default:
             Debug.Log("找不到");

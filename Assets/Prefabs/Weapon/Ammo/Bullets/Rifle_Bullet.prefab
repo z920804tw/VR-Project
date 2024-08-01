@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 739890718394394265}
   - component: {fileID: 3987186528097329047}
   m_Layer: 0
-  m_Name: Pistol_Bullet
+  m_Name: Rifle_Bullet
   m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -126,7 +126,7 @@ Rigidbody:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
@@ -146,6 +146,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b0bc945ed05f2b4b95b3840f57507a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gunType: 4
+  gunType: 1
   MaxDmg: 0
   MinDmg: 0

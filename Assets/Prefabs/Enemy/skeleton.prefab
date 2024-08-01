@@ -2770,7 +2770,7 @@ MonoBehaviour:
   minDmg: 10
   layerMask:
     serializedVersion: 2
-    m_Bits: 384
+    m_Bits: 128
   dmg_UI: {fileID: 4846246159750435948, guid: 71baa9fba78e49f489848e21a4937814, type: 3}
   isDead: 0
   isHit: 0
