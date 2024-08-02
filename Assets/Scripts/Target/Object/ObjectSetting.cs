@@ -105,7 +105,6 @@ public class ObjectSetting : MonoBehaviour
             preSpeed = move.moveSpeed;
 
             outline.enabled = true;
-            Debug.Log(transform.localScale);
 
         }
         else                            //如果isHolding為true時，會會重製所有基本設定，並角色移動速度、物件縮放、都會恢復之前的值。放開物件時用到

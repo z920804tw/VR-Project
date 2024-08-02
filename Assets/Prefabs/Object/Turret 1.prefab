@@ -532,7 +532,7 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 2240
-  objectHp: 200
+  objectHp: 500
   placeMaxDistance: 5
   leftHandRotate: {fileID: 1010738217276881514, guid: c348712bda248c246b8c49b3db54643f,
     type: 3}
@@ -565,10 +565,10 @@ MonoBehaviour:
   shootClip: {fileID: 8300000, guid: a764377339b869e459f5e53fb9258f73, type: 3}
   turnClip: {fileID: 8300000, guid: 77514998b089f434e873033806beab17, type: 3}
   deadClip: {fileID: 8300000, guid: 1fd31868d68903d4f9e2c4a3b7ef98f3, type: 3}
-  fireDelay: 3
-  bulletSpeed: 15
+  fireDelay: 1.5
+  bulletSpeed: 30
   turnSpeed: 3
-  rayDistance: 5
+  rayDistance: 20
   maxDmg: 50
   minDmg: 30
   target: {fileID: 0}
